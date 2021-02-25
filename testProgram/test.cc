@@ -23,13 +23,11 @@ void case1() {
 
     std::thread threadArr[MAX_THREAD];
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i] = std::thread(&incrementManyTimes<long long int>, std::ref(number));
     }
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i].join();
     }
     auto end = std::chrono::high_resolution_clock::now();
@@ -46,13 +44,11 @@ void case2() {
 
     std::thread threadArr[MAX_THREAD];
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i] = std::thread(&incrementManyTimes<long long int>, std::ref(number));
     }
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i].join();
     }
     auto end = std::chrono::high_resolution_clock::now();
@@ -70,13 +66,11 @@ void case3() {
 
     std::thread threadArr[MAX_THREAD];
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i] = std::thread(&incrementManyTimes<std::atomic<long long int>>, std::ref(number));
     }
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i].join();
     }
     auto end = std::chrono::high_resolution_clock::now();
@@ -94,13 +88,11 @@ void case4() {
 
     std::thread threadArr[MAX_THREAD];
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i] = std::thread(&incrementManyTimes<std::atomic<long long int>>, std::ref(number));
     }
 
-    for (int i = 0; i < MAX_THREAD; ++i)
-    {
+    for (int i = 0; i < MAX_THREAD; ++i) {
         threadArr[i].join();
     }
     auto end = std::chrono::high_resolution_clock::now();
