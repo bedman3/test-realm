@@ -2,7 +2,7 @@ config:
   serverHost: 0.0.0.0
   serverPort: 7000
   clientConnections:
-    - {
-        host: 127.0.0.1
-        port: 6000
-    }
+    - host: 127.0.0.1
+      port: 6000
+    - host: 127.0.0.1
+      port: 6001
