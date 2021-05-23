@@ -1,6 +1,6 @@
 import socket
 import ctypes
-import struct
+import sys
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 7000        # The port used by the server
@@ -20,31 +20,37 @@ class chatMessage(ctypes.Structure):
         ("message_", ctypes.c_char * MAX_MESSAGE_STRING_SIZE)
     ]
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    buf = (ctypes.c_char * 1024)()
-    fmt = "<NL1000s"
 
-    messageStr = "Testing sending message to a server"
+if __name__ == "__main__":
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        buf = (ctypes.c_char * 1024)()
+        exitFlag = False
+        s.connect((HOST, PORT))
+        print(f"connected to host {HOST} and port {PORT}")
 
-    anotherMessageStr = "Haha just testing"
+        try:
+            while not exitFlag:
+                inputStr = input("Input a string to send to server, (type exit to quit shell): ")
 
-    # header = messageHeader(length_=len(anotherMessageStr), messageType_=1000)
-    # chatMsg = chatMessage(header_=header, message_=anotherMessageStr)
-    chatMsg = chatMessage()
-    chatMsg.header_.length_ = len(anotherMessageStr)
-    chatMsg.header_.messageType_ = 1000
-    chatMsg.message_ = anotherMessageStr.encode('utf8')
+                if len(inputStr) > MAX_MESSAGE_STRING_SIZE:
+                    print(f"Input string greater than maximum size of {MAX_MESSAGE_STRING_SIZE}, please retry", file=sys.stderr)
+                    continue
 
-    print(f'checking message {chatMsg.header_.length_} {chatMsg.header_.messageType_} {chatMsg.message_}')
-    sendBytes = bytes((ctypes.c_char * ctypes.sizeof(chatMsg)).from_buffer_copy(chatMsg))
-    print(f'sending {sendBytes}')
+                if inputStr == "exit":
+                    exitFlag = True
+                    continue
 
-    s.connect((HOST, PORT))
-    print(f"connected to host {HOST} and port {PORT}")
-    s.send(sendBytes)
+                chatMsg = chatMessage()
+                chatMsg.header_.length_ = ctypes.sizeof(chatMsg) - ctypes.sizeof(messageHeader)
+                chatMsg.header_.messageType_ = 1000
+                chatMsg.message_ = inputStr.encode('utf8')
 
+                print(f'checking message {chatMsg.header_.length_} {chatMsg.header_.messageType_} {chatMsg.message_}')
+                sendBytes = bytes((ctypes.c_char * ctypes.sizeof(chatMsg)).from_buffer_copy(chatMsg))
+                # print(f'sending {sendBytes}')
 
-
-
-
-
+                s.sendall(sendBytes)
+        except KeyboardInterrupt:
+            pass
+        finally:
+            s.close()

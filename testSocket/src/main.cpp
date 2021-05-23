@@ -10,7 +10,7 @@
 #include "Server.h"
 
 
-//void handleRead(boost::array<char, headerBufferSize> buf, const boost::system::error_code& error) {
+//void handleRead(boost::array<char, HEADER_BUFFER_SIZE> buf, const boost::system::error_code& error) {
 //    if (error) {
 //        std::cerr << "Detected error at reading, exiting" << std::endl;
 //        std::cerr << error.message() << std::endl;
@@ -24,7 +24,7 @@
 //        std::cerr << "Detected error at accepting, exiting" << std::endl;
 //        std::cerr << error.message() << std::endl;
 //    } else {
-//        boost::array<char, headerBufferSize> buf;
+//        boost::array<char, HEADER_BUFFER_SIZE> buf;
 //        boost::asio::async_read(socket, boost::asio::buffer(buf), boost::bind(&handleRead, buf, boost::asio::placeholders::error));
 //    }
 //

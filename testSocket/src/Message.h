@@ -20,7 +20,7 @@ struct MessageHeader {
     uint32_t messageType_;
 };
 
-const size_t headerBufferSize = sizeof (MessageHeader);
+const size_t HEADER_BUFFER_SIZE = sizeof (MessageHeader);
 
 struct ChatMessage {
     MessageHeader header_;

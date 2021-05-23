@@ -33,30 +33,39 @@ void Server::async_run() {
 
 void Server::doReadHeader() {
     boost::asio::async_read(socket_,
-                            boost::asio::buffer(buf_, headerBufferSize),
-//                            boost::asio::transfer_exactly(headerBufferSize),
+                            boost::asio::buffer(buf_, HEADER_BUFFER_SIZE),
                             [this](boost::system::error_code ec, std::size_t bytesTransferred) {
-        std::cout << "Socket read header bytes [" << bytesTransferred << "]" << std::endl;
+//        std::cout << "Socket read header bytes [" << bytesTransferred << "]" << std::endl;
         if (!ec) {
+//            chatMsg_.importHeader();
             const MessageHeader* messageHeader = static_cast<const MessageHeader*>((void *)this->buf_);
-            std::cout << "Received message with message type [" << messageHeader->messageType_ << "] and message length [" << messageHeader->length_ << "]" << std::endl;
+//            std::cout << "Received message with message type [" << messageHeader->messageType_ << "] and message length [" << messageHeader->length_ << "]" << std::endl;
 
             switch (messageHeader->messageType_) {
                 case CHAT_MESSAGE:
-                    doReadChatMessage();
+                    boost::asio::async_read(socket_,
+                                            boost::asio::buffer((void*)(buf_ + HEADER_BUFFER_SIZE), messageHeader->length_),
+                                            [this](boost::system::error_code ec, std::size_t bytesTransferred) {
+                        doReadChatMessage(static_cast<const ChatMessage*>((void *)buf_));
+                    });
                     break;
                 default:
                     std::cout << "Unknown message type [" << messageHeader->messageType_ << "], dropping messages" << std::endl;
             }
-            doReadBody();
+            doReadHeader();
+        } else if (ec == boost::asio::error::operation_aborted || ec == boost::asio::error::eof) {
+            std::cerr << "Socket closed ungracefully, disconnecting: " << ec.message() << std::endl;
+            socket_.shutdown(socket_.shutdown_both);
+            socket_.close();
         } else {
             std::cerr << "Error occurred while reading header: " << ec.message() << std::endl;
         }
+
     });
 }
 
-void Server::doReadChatMessage() {
-
+void Server::doReadChatMessage(const ChatMessage *chatMessage) {
+    std::cout << "Message received [" << chatMessage->message_ << "]" << std::endl;
 }
 
 void Server::doReadBody() {

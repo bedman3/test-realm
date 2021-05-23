@@ -29,7 +29,7 @@ public:
     void async_run();
 
     void doReadBody();
-    void doReadChatMessage();
+    void doReadChatMessage(const ChatMessage *chatMessage);
 };
 
 
