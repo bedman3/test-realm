@@ -47,8 +47,14 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 include_directories(BEFORE SYSTEM ${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR}/include)
+set(SOURCE_FILES
+        src/main.cpp
+        src/Server.cpp
+        src/CommandParser.cpp
+        src/Message.h
+        src/Endpoint.h)
 
-add_executable(testSocket src/main.cpp)
+add_executable(testSocket ${SOURCE_FILES})
 
 target_link_libraries(testSocket
     ${CMAKE_THREAD_LIBS_INIT}
