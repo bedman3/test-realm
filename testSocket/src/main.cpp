@@ -16,11 +16,12 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<Endpoint> serverEndpoint;
     std::vector<std::shared_ptr<Endpoint>> clientEndpoints;
     std::shared_ptr<boost::asio::io_context> ioContext = std::make_shared<boost::asio::io_context>();
+    spdlog::init_thread_pool(8192, 1);
     auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/socketApp.log", 1024 * 1024 * 50, 3);
     std::vector<spdlog::sink_ptr> sinks {stdout_sink, rotating_sink};
     auto logger = std::make_shared<spdlog::async_logger>("socketAppLogger", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
-
+    spdlog::register_logger(logger);
 
     if (!CommandParser::parse(argc, argv, serverEndpoint, clientEndpoints)) {
         logger->error("Parsing error, exiting");
