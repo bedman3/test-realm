@@ -3,48 +3,35 @@
 //
 
 #include <iostream>
-#include <cstring>
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/async_logger.h>
+#include <spdlog/async.h>
 #include "CommandParser.h"
 #include "Server.h"
-
-
-//void handleRead(boost::array<char, HEADER_BUFFER_SIZE> buf, const boost::system::error_code& error) {
-//    if (error) {
-//        std::cerr << "Detected error at reading, exiting" << std::endl;
-//        std::cerr << error.message() << std::endl;
-//    } else {
-//        std::cout << "Read: [" << buf.data() << "]" << std::endl;
-//    }
-//}
-//
-//void handleAccept(boost::asio::ip::tcp::socket &socket, const boost::system::error_code& error) {
-//    if (error) {
-//        std::cerr << "Detected error at accepting, exiting" << std::endl;
-//        std::cerr << error.message() << std::endl;
-//    } else {
-//        boost::array<char, HEADER_BUFFER_SIZE> buf;
-//        boost::asio::async_read(socket, boost::asio::buffer(buf), boost::bind(&handleRead, buf, boost::asio::placeholders::error));
-//    }
-//
-//    std::cout << "Accepted Connection" << std::endl;
-//}
+#include "spdlog/sinks/rotating_file_sink.h"
 
 int main(int argc, char *argv[]) {
     std::shared_ptr<Endpoint> serverEndpoint;
     std::vector<std::shared_ptr<Endpoint>> clientEndpoints;
     std::shared_ptr<boost::asio::io_context> ioContext = std::make_shared<boost::asio::io_context>();
+    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/socketApp.log", 1024 * 1024 * 50, 3);
+    std::vector<spdlog::sink_ptr> sinks {stdout_sink, rotating_sink};
+    auto logger = std::make_shared<spdlog::async_logger>("socketAppLogger", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+
 
     if (!CommandParser::parse(argc, argv, serverEndpoint, clientEndpoints)) {
-        std::cerr << "Parsing error, exiting" << std::endl;
+        logger->error("Parsing error, exiting");
+
         return 0;
     }
 
     try {
-        std::cout << "Initializing server" << std::endl;
+        spdlog::info("Initializing server");
 
-        Server server(serverEndpoint, ioContext);
+        Server server(serverEndpoint, ioContext, logger);
 
 //        server.async_run();
 
@@ -55,7 +42,7 @@ int main(int argc, char *argv[]) {
 
         ioContext->run();
     } catch (std::exception& e) {
-        std::cerr << "Main thread exception \n" << e.what() << std::endl;
+        spdlog::error("Main thread exception \n" + std::string(e.what()));
     }
 
     return 0;

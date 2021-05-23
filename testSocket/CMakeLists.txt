@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
-project(testSocket)
+project(socketApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -43,10 +43,31 @@ if(NOT boost_POPULATED)
     message(STATUS "Done.")
 endif()
 
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog
+        GIT_SHALLOW	ON
+        GIT_TAG v1.8.5
+        SOURCE_DIR ${PROJECT_SOURCE_DIR}/inc/spdlog
+)
+FetchContent_GetProperties(spdlog)
+if(NOT spdlog_POPULATED)
+    message(STATUS "Populating spdlog...")
+    FetchContent_Populate(spdlog)
+    # Add here options for spdlog building
+    set(SPDLOG_BUILD_TESTS OFF)
+    add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
+    message(STATUS "Done.")
+endif()
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-include_directories(BEFORE SYSTEM ${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR}/include)
+include_directories(BEFORE SYSTEM
+        ${yaml-cpp_SOURCE_DIR}
+        ${yaml-cpp_BINARY_DIR}/include
+        ${spdlog_SOURCE_DIR}
+        ${spdlog_BINARY_DIR}/include)
 set(SOURCE_FILES
         src/main.cpp
         src/Server.cpp
@@ -54,10 +75,11 @@ set(SOURCE_FILES
         src/Message.h
         src/Endpoint.h)
 
-add_executable(testSocket ${SOURCE_FILES})
+add_executable(socketApp ${SOURCE_FILES})
 
-target_link_libraries(testSocket
+target_link_libraries(socketApp
     ${CMAKE_THREAD_LIBS_INIT}
     yaml-cpp
     pthread
+    spdlog
 )
