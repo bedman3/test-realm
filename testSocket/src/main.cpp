@@ -21,29 +21,26 @@ int main(int argc, char *argv[]) {
     auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/socketApp.log", 1024 * 1024 * 50, 3);
     std::vector<spdlog::sink_ptr> sinks {stdout_sink, rotating_sink};
     auto logger = std::make_shared<spdlog::async_logger>("socketAppLogger", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+    logger->set_level(spdlog::level::debug);
+    logger->set_pattern("[%H:%M:%S] [%^-%L-%$] [t %t] %v");
     spdlog::register_logger(logger);
 
     if (!CommandParser::parse(argc, argv, serverEndpoint, clientEndpoints)) {
         logger->error("Parsing error, exiting");
 
-        return 0;
+        return -1;
     }
 
     try {
-        spdlog::info("Initializing server");
+        logger->info("Initializing server");
 
         Server server(serverEndpoint, ioContext, logger);
 
 //        server.async_run();
 
-
-//        std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> clientSocketsList;
-//        std::cout << "Building client socket" << std::endl;
-//        boost::asio::ip::tcp::socket clientSocket(ioContext_);
-
         ioContext->run();
     } catch (std::exception& e) {
-        spdlog::error("Main thread exception \n" + std::string(e.what()));
+        logger->error("Main thread exception \n" + std::string(e.what()));
     }
 
     return 0;

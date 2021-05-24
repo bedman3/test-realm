@@ -73,7 +73,7 @@ set(SOURCE_FILES
         src/Server.cpp
         src/CommandParser.cpp
         src/Message.h
-        src/Endpoint.h)
+        src/Endpoint.h src/Utility.cpp src/Utility.h)
 
 add_executable(socketApp ${SOURCE_FILES})
 

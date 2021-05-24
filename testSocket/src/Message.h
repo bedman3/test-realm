@@ -10,8 +10,8 @@ struct MessageHeader;
 const uint MAX_MESSAGE_STRING_SIZE = 1000;
 
 #pragma pack(1)
-enum MessageType {
-    CHAT_MESSAGE = 1000
+namespace MessageType {
+    const int CHAT_MESSAGE = 1000;
 };
 
 
