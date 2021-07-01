@@ -67,13 +67,17 @@ include_directories(BEFORE SYSTEM
         ${yaml-cpp_SOURCE_DIR}
         ${yaml-cpp_BINARY_DIR}/include
         ${spdlog_SOURCE_DIR}
-        ${spdlog_BINARY_DIR}/include)
+        ${spdlog_BINARY_DIR}/include
+        ${boost_SOURCE_DIR}
+        ${boost_BINARY_DIR}/include)
 set(SOURCE_FILES
         src/main.cpp
         src/Server.cpp
         src/CommandParser.cpp
         src/Message.h
-        src/Endpoint.h src/Utility.cpp src/Utility.h)
+        src/Endpoint.h
+        src/Utility.cpp
+        src/Utility.h)
 
 add_executable(socketApp ${SOURCE_FILES})
 

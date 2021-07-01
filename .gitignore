@@ -65,3 +65,10 @@ lib/*
 bin/*
 test/test_runner
 inc/*
+.vscode
+_deps
+logs
+Testing
+*.pc
+*.cbp
+inc

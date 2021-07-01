@@ -23,6 +23,7 @@ void Server::async_run() {
             std::shared_ptr<boost::asio::ip::tcp::socket> socketPtr = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
             socketVector_.push_back(socketPtr);
             logger_->info("Socket connected with remote client [" + Utility::to_string(socketPtr->remote_endpoint()) + "]");
+
             if (!ec) {
                 doReadHeader(socketPtr);
             } else {
@@ -85,4 +86,5 @@ Server::~Server() {
                           socket->close();
                       }
                   });
+
 }
