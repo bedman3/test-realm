@@ -86,5 +86,4 @@ Server::~Server() {
                           socket->close();
                       }
                   });
-
 }

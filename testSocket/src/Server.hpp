@@ -13,6 +13,8 @@
 #include <boost/array.hpp>
 #include <spdlog/async_logger.h>
 #include "Utility.h"
+#include "Session.h"
+#include "unordered_set"
 
 class Server {
     std::shared_ptr<Endpoint> serverEndpoint_;
@@ -20,6 +22,7 @@ class Server {
     boost::asio::ip::tcp::acceptor acceptor_;
     std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> socketVector_;
     std::shared_ptr<spdlog::async_logger> logger_;
+    std::unordered_set<Session> sessions_;
     char buf_[2048];
 
 
