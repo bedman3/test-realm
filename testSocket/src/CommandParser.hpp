@@ -9,7 +9,7 @@
 #include <cstring>
 #include <memory>
 #include <vector>
-#include "Endpoint.h"
+#include "Endpoint.hpp"
 #include "yaml-cpp/yaml.h"
 
 class CommandParser {

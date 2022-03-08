@@ -74,10 +74,12 @@ set(SOURCE_FILES
         src/main.cpp
         src/Server.cpp
         src/CommandParser.cpp
-        src/Message.h
-        src/Endpoint.h
+        src/Message.hpp
+        src/Endpoint.hpp
         src/Utility.cpp
-        src/Utility.h)
+        src/Utility.hpp
+        src/Session.hpp
+        src/Session.cpp)
 
 add_executable(socketApp ${SOURCE_FILES})
 

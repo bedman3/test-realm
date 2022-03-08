@@ -8,8 +8,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/async_logger.h>
 #include <spdlog/async.h>
-#include "CommandParser.h"
-#include "Server.h"
+#include "CommandParser.hpp"
+#include "Server.hpp"
 #include "spdlog/sinks/rotating_file_sink.h"
 
 int main(int argc, char *argv[]) {

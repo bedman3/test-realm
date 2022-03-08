@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "CommandParser.h"
+#include "CommandParser.hpp"
 
 bool CommandParser::parse(int argc, const char* const argv[], std::shared_ptr <Endpoint>& serverEndpoint,
                           std::vector <std::shared_ptr<Endpoint>>& clientEndpoints) {

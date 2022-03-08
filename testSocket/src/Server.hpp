@@ -6,14 +6,14 @@
 #define TESTSOCKET_SERVER_H
 
 #include <memory>
-#include "Endpoint.h"
-#include "Message.h"
+#include "Endpoint.hpp"
+#include "Message.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/array.hpp>
 #include <spdlog/async_logger.h>
-#include "Utility.h"
-#include "Session.h"
+#include "Utility.hpp"
+#include "Session.hpp"
 #include "unordered_set"
 
 class Server {
@@ -22,7 +22,7 @@ class Server {
     boost::asio::ip::tcp::acceptor acceptor_;
     std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> socketVector_;
     std::shared_ptr<spdlog::async_logger> logger_;
-    std::unordered_set<Session> sessions_;
+    std::unordered_set<std::shared_ptr<Session>> sessions_;
     char buf_[2048];
 
 

@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Server.h"
+#include "Server.hpp"
 
 Server::Server(std::shared_ptr <Endpoint>& serverEndpoint, std::shared_ptr<boost::asio::io_context>& ioContext,
                std::shared_ptr<spdlog::async_logger> logger) :
@@ -20,12 +20,14 @@ void Server::async_run() {
     logger_->info("Server accepting socket at endpoint [" + Utility::to_string(acceptor_.local_endpoint()) + "]");
     acceptor_.async_accept(
         [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
-            std::shared_ptr<boost::asio::ip::tcp::socket> socketPtr = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
-            socketVector_.push_back(socketPtr);
-            logger_->info("Socket connected with remote client [" + Utility::to_string(socketPtr->remote_endpoint()) + "]");
+            std::shared_ptr<Session> session = std::make_shared<Session>(std::move(socket));
+
+            sessions_.insert(session);
+
+            logger_->info("Socket connected with remote client [" + Utility::to_string(session->getSocketRemoteEndpoint()) + "]");
 
             if (!ec) {
-                doReadHeader(socketPtr);
+                session->doReadHeader();
             } else {
                 logger_->error("Error occurred while accepting socket: " + ec.message());
             }
@@ -79,11 +81,8 @@ void Server::doReadBody() {
 
 Server::~Server() {
     logger_->info("Server destructor called");
-    std::for_each(socketVector_.begin(), socketVector_.end(),
-                  [](std::shared_ptr<boost::asio::ip::tcp::socket>& socket) {
-                      if (socket->is_open()) {
-                          socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-                          socket->close();
-                      }
-                  });
+    // delete all initialised sessions
+    for (auto session : sessions_) {
+        session->close();
+    }
 }
