@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <
+#include ""
 
 class socket_comm {
 
@@ -19,9 +19,7 @@ class socket_comm {
     void run() {
         if (isClient) {
             
-        } else {
-
-        }
+        } else {}
         
     }
 };
