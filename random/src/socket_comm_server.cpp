@@ -18,8 +18,6 @@ void socket_comm_server::run() {
     this->ioContext_.run();
 }
 
-
-
 socket_comm_server::~socket_comm_server() {
 
 }
