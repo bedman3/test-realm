@@ -8,7 +8,7 @@ socket_comm_server::socket_comm_server(const std::string &host, int port) :
 
 void socket_comm_server::run() {
     this->acceptor_.async_accept([this] (std::error_code ec, boost::asio::ip::tcp::socket&& newSocket) {
-
+        
     });
 }
 
