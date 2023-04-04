@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <boost/array.hpp>
 
 class socket_comm {
 
@@ -15,12 +16,5 @@ class socket_comm {
     socket_comm(const socket_comm&) = delete;
     socket_comm(socket_comm&&) = delete;
 
-    void run() {
-        if (isClient) {
-            
-        } else {
-
-        }
-        
-    }
+    void run();
 };
