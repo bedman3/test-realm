@@ -7,6 +7,7 @@
 class socket_comm {
 protected:
     boost::asio::io_context ioContext_;
+    std::unique_ptr<spdlog::logger> logger_;
     const std::string host_;
     int port_;
 
