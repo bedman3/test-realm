@@ -28,7 +28,7 @@ set(BOOST_ROOT ${boost_SOURCE_DIR})
 find_package(Boost ${Boost_VERSION} REQUIRED)
 
 add_executable(socket_comm_app
-        ${source_files})
+        ${source_files} src/socket_comm_server.cpp src/socket_comm_server.hpp src/socket_comm_client.cpp src/socket_comm_client.hpp)
 target_include_directories(socket_comm_app PUBLIC src)
 include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(socket_comm_app ${Boost_LIBRARIES})
