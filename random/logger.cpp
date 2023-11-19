@@ -189,7 +189,7 @@ int main() {
     // logger.severe("Hi Severe");
 
     long number = 0;
-    long loopCount = 10e5;
+    long loopCount = 10e6;
     long thread = 10;
     std::stringstream ss;    
 
