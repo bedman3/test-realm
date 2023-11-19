@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <ostream>
 #include <vector>
 
 void printVec(std::vector<int>& vec) {
@@ -14,6 +15,7 @@ void printVec(std::vector<int>& vec) {
             std::cout << ", " << num;
         }
     }
+    std::cout << "Test cpp" << std::endl;
     std::cout << "]" << std::endl;
 }
 
